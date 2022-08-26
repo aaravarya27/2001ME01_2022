@@ -1,5 +1,15 @@
-def factorial(int x):
-    
+def factorial(num):
+    if (num==0 or num==1):
+        return 1
+    else:
+        x = 1
+        while(num>1):
+            x = x*num
+            num = num-1
+        return x
 
-x=int(input("Enter the number whose factorial is to be found"))
-factorial(x)
+num = int(input("Enter a number "))
+if(num >= 0):
+    print("Factorial of",num, "is",factorial(num))
+else:
+    print("Invalid input")
