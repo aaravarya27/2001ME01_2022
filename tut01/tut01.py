@@ -12,4 +12,4 @@ num = int(input("Enter a number "))
 if(num >= 0):
     print("Factorial of",num, "is",factorial(num))
 else:
-    print("Invalid input")
+    print("Invalid input") # Negative integer is invalid
