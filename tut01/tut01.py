@@ -65,31 +65,29 @@ def octact_identification(mod=5000):
     num = len_csv1/mod
     range_total = math.floor(num) # total number of ranges
                                   # .floor() works as greatest integer function
-    if(mod == 29745): # special case
-            range_total -= 1
+    # special case
+    if(mod == 29745):
+        range_total -= 1
+    if(mod == 1):
+        range_total -=1
+
+    temp = 0 # create and initialize a temporary variable
 
     # for loop to get ranges
-    for i in range (1, range_total + 1): #loop goes from 1 to range_total + 1
+    for i in range (1, range_total+1):
         range_left = i*mod # left value 
         range_right = (i+1)*mod - 1 # right value
         if(range_right >= len_csv1): # right value for cases where num != 0
             range_right = len_csv1 - 1
         csv1.at[i+2, 'Octant ID'] = str(range_left) + '-' + str(range_right)
 
-    # create a list with octant values
-    octant = [1, -1, 2, -2, 3, -3, 4, -4]
-    
-    # iterating over objects of list octant
-    for octant_number in octant:
-        csv1.insert(csv1.shape[1], octant_number, "", True) #new columns with names as objects of octant
-        csv1.at[0, octant_number] = csv1['Octant'].value_counts()[octant_number] # use .value_counts() to count the number of occurances of each object of octant
 
-    
+    # write over the octant_output.csv file
+    #csv1.to_csv('octant_output.csv', index = False)
 
+    print(csv1)
 
-    # display contents of CSV file upto index 4
-    print(csv1.head())
-
+# check python version
 from platform import python_version
 ver = python_version()
 
@@ -98,5 +96,5 @@ if ver == "3.8.10":
 else:
     print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmjw")
 
-mod=5000
-octact_identification(mod)
+mod = 5000 # hardcoded mod value
+octact_identification(mod) # call the function
