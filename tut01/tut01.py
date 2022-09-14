@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import math
 os.system('cls')
 
 # function to assign octant
@@ -15,7 +16,7 @@ def octant_assign(x,y,z):
         oct = 4
 
     if(z<0): # reduce number of if conditions
-        oct = oct*-1
+        oct *= -1
 
     return oct # return integer value
 
@@ -23,7 +24,10 @@ def octact_identification(mod=5000):
 
     # read input CSV file
     csv1 = pd.read_csv('octant_input.csv')
-    
+
+    #store length of dataframe 
+    len_csv1 = csv1.shape[0]
+
     # insert U Avg, V Avg & W Avg columns with blank values using .insert()
     csv1.insert(4, 'U Avg', "", True)
     csv1.insert(5, 'V Avg', "", True)
@@ -46,7 +50,42 @@ def octact_identification(mod=5000):
     
     # lambda function
     # .apply() to pass a function and apply it to all rows
-    csv1["Octant"] = csv1.apply(lambda row: octant_assign(row["U'=U-U Avg"], row["V'=V-V Avg"], row["W'=W-W Avg"]), axis = 1)
+    csv1['Octant'] = csv1.apply(lambda row: octant_assign(row["U'=U-U Avg"], row["V'=V-V Avg"], row["W'=W-W Avg"]), axis = 1)
+
+    # insert column 11
+    csv1.insert(11, '', "", True)
+    csv1.at[1,''] = 'User Input'
+
+    #insert column 12
+    csv1.insert(12, 'Octant ID', "", True)
+    csv1.at[0, 'Octant ID'] = 'Overall Count'
+    csv1.at[1, 'Octant ID'] = 'Mod ' + str(mod) # display mod as string using str()
+    csv1.at[2, 'Octant ID'] = '0 - ' + str(mod - 1) # range goes from 0 to mod - 1
+
+    num = len_csv1/mod
+    range_total = math.floor(num) # total number of ranges
+                                  # .floor() works as greatest integer function
+    if(mod == 29745): # special case
+            range_total -= 1
+
+    # for loop to get ranges
+    for i in range (1, range_total + 1): #loop goes from 1 to range_total + 1
+        range_left = i*mod # left value 
+        range_right = (i+1)*mod - 1 # right value
+        if(range_right >= len_csv1): # right value for cases where num != 0
+            range_right = len_csv1 - 1
+        csv1.at[i+2, 'Octant ID'] = str(range_left) + '-' + str(range_right)
+
+    # create a list with octant values
+    octant = [1, -1, 2, -2, 3, -3, 4, -4]
+    
+    # iterating over objects of list octant
+    for octant_number in octant:
+        csv1.insert(csv1.shape[1], octant_number, "", True) #new columns with names as objects of octant
+        csv1.at[0, octant_number] = csv1['Octant'].value_counts()[octant_number] # use .value_counts() to count the number of occurances of each object of octant
+
+    
+
 
     # display contents of CSV file upto index 4
     print(csv1.head())
