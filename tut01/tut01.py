@@ -1,15 +1,14 @@
-def factorial(num):
-    if (num==0 or num==1):
-        return 1
-    else:
-        x = 1
-        while(num>1):
-            x = x*num
-            num = num-1
-        return x
+def octact_identification(mod=5000):
+###Code
 
-num = int(input("Enter a number "))
-if(num >= 0):
-    print("Factorial of",num, "is",factorial(num))
+
+from platform import python_version
+ver = python_version()
+
+if ver == "3.8.10":
+    print("Correct Version Installed")
 else:
-    print("Invalid input") # Negative integer is invalid
+    print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmjw")
+
+mod=5000
+octact_identification(mod)
