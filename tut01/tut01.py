@@ -100,7 +100,8 @@ def octact_identification(mod=5000):
                 csv1.at[i+1 ,j] = 0
         temp = temp + mod
 
-
+    # write over the octant_output.csv file
+    csv1.to_csv('octant_output.csv', index = False)
 
 # check python version
 from platform import python_version
