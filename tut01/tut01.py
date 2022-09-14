@@ -89,11 +89,18 @@ def octact_identification(mod=5000):
         csv1.insert(csv1.shape[1], octant_number, "", True) #new columns with names as objects of octant
         csv1.at[0, octant_number] = csv1['Octant'].value_counts()[octant_number] # use .value_counts() to count the number of occurances of each object of octant
 
-    
-    # write over the octant_output.csv file
-    #csv1.to_csv('octant_output.csv', index = False)
+    #for loop to get individual counts
+    for i in range(1, range_total+2):
+        # variable to store individual count of each range for a mod value
+        count = csv1['Octant'][temp:temp+mod].value_counts() #range goes from temp to temp+mod - 1
+        for j in octant: #iterate for objects in octant
+            if(j in count):
+                csv1.at[i+1 ,j] = count[j] # assign count of particular octant to designated cell
+            else: # to accomodate the case of no occurance of an octant in a particular range
+                csv1.at[i+1 ,j] = 0
+        temp = temp + mod
 
-    print(csv1)
+
 
 # check python version
 from platform import python_version
