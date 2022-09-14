@@ -66,10 +66,8 @@ def octact_identification(mod=5000):
     range_total = math.floor(num) # total number of ranges
                                   # .floor() works as greatest integer function
     # special case
-    if(mod == 29745):
+    if(mod == 29745 or mod == 1):
         range_total -= 1
-    if(mod == 1):
-        range_total -=1
 
     temp = 0 # create and initialize a temporary variable
 
@@ -112,5 +110,5 @@ if ver == "3.8.10":
 else:
     print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmjw")
 
-mod = 5000 # hardcoded mod value
+mod = 700 # hardcoded mod value
 octact_identification(mod) # call the function
