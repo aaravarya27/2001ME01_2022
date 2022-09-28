@@ -56,8 +56,30 @@ def octact_identification(mod=5000):
     data_xlsx.insert(11, '', "", True)
     data_xlsx.at[1,''] = 'User Input'
 
-   
+    #insert column 12
+    data_xlsx.insert(12, 'Octant ID', "", True)
+    data_xlsx.at[0, 'Octant ID'] = 'Overall Count'
+    data_xlsx.at[1, 'Octant ID'] = 'Mod ' + str(mod) # display mod as string using str()
+    data_xlsx.at[2, 'Octant ID'] = '0 - ' + str(mod - 1) # range goes from 0 to mod - 1
 
+    num = len_data_xlsx/mod
+    range_total = math.floor(num) # total number of ranges
+                                  # .floor() works as greatest integer function
+    # special case
+    if(mod == 29745 or mod == 1):
+        range_total -= 1
+
+    temp = 0 # create and initialize a temporary variable
+
+    # for loop to get ranges
+    for i in range (1, range_total+1):
+        range_left = i*mod # left value 
+        range_right = (i+1)*mod - 1 # right value
+        if(range_right >= len_data_xlsx): # right value for cases where num != 0
+            range_right = len_data_xlsx - 1
+        data_xlsx.at[i+2, 'Octant ID'] = str(range_left) + '-' + str(range_right)
+
+    
     # write over the octant_output.excel file
     data_xlsx.to_excel('testfile.xlsx', index = False)
 
