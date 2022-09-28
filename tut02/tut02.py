@@ -1,6 +1,49 @@
-def octant_transition_count(mod=5000):
-###Code
+import os
+import pandas as pd
+import math
+os.system('cls')
 
+# function to assign octant
+def octant_assign(x,y,z):
+    oct = 0 # initialization
+    if(x>=0 and y>=0):
+        oct = 1
+    elif(x<0 and y>=0):
+        oct = 2
+    elif(x<0 and y<0):
+        oct = 3
+    elif(x>=0 and y<0):
+        oct = 4
+
+    if(z<0): # reduce number of if conditions
+        oct *= -1
+
+    return oct # return integer value
+
+def octact_identification(mod=5000):
+
+    # read input excel file
+    data_xlsx = pd.read_excel('input_octant_transition_identify.xlsx')
+
+    #store length of dataframe 
+    len_data_xlsx = data_xlsx.shape[0]
+
+    # insert U Avg, V Avg & W Avg columns with blank values using .insert()
+    data_xlsx.insert(4, 'U Avg', "", True)
+    data_xlsx.insert(5, 'V Avg', "", True)
+    data_xlsx.insert(6, 'W Avg', "", True)
+
+    # calculate mean values of U,V,W and assigned to index 0 row of U Avg, V Avg, W Avg using .at()
+    data_xlsx.at[0,'U Avg'] = data_xlsx['U'].mean()
+    data_xlsx.at[0,'V Avg'] = data_xlsx['V'].mean()
+    data_xlsx.at[0,'W Avg'] = data_xlsx['W'].mean()
+
+
+
+    # write over the octant_output.excel file
+    data_xlsx.to_excel('testfile.xlsx', index = False)
+
+# check python version
 from platform import python_version
 ver = python_version()
 
@@ -9,5 +52,5 @@ if ver == "3.8.10":
 else:
     print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmjw")
 
-mod=5000
-octant_transition_count(mod)
+mod = 5000 # hardcoded mod value
+octact_identification(mod) # call the function
