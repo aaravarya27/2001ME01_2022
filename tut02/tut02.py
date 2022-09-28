@@ -79,7 +79,25 @@ def octact_identification(mod=5000):
             range_right = len_data_xlsx - 1
         data_xlsx.at[i+2, 'Octant ID'] = str(range_left) + '-' + str(range_right)
 
+        # create a list with octant values
+    octant = [1, -1, 2, -2, 3, -3, 4, -4]
     
+    # iterating over objects of list octant
+    for octant_number in octant:
+        data_xlsx.insert(data_xlsx.shape[1], octant_number, "", True) #new columns with names as objects of octant
+        data_xlsx.at[0, octant_number] = data_xlsx['Octant'].value_counts()[octant_number] # use .value_counts() to count the number of occurances of each object of octant
+
+    #for loop to get individual counts
+    for i in range(1, range_total+2):
+        # variable to store individual count of each range for a mod value
+        count = data_xlsx['Octant'][temp:temp+mod].value_counts() #range goes from temp to temp+mod - 1
+        for j in octant: #iterate for objects in octant
+            if(j in count):
+                data_xlsx.at[i+1 ,j] = count[j] # assign count of particular octant to designated cell
+            else: # to accomodate the case of no occurance of an octant in a particular range
+                data_xlsx.at[i+1 ,j] = 0
+        temp = temp + mod
+
     # write over the octant_output.excel file
     data_xlsx.to_excel('testfile.xlsx', index = False)
 
