@@ -38,6 +38,16 @@ def octact_identification(mod=5000):
     data_xlsx.at[0,'V Avg'] = data_xlsx['V'].mean()
     data_xlsx.at[0,'W Avg'] = data_xlsx['W'].mean()
 
+    # insert U', V' & W' columns 
+    data_xlsx.insert(7, 'U\'=U-U Avg', "", True)
+    data_xlsx.insert(8, 'V\'=V-V Avg', "", True)
+    data_xlsx.insert(9, 'W\'=W-W Avg', "", True)
+
+    # calculate U', V', W' for each row using .subtract()
+    data_xlsx['U\'=U-U Avg'] = data_xlsx['U'].subtract(data_xlsx['U Avg'][0])
+    data_xlsx['V\'=V-V Avg'] = data_xlsx['V'].subtract(data_xlsx['V Avg'][0])
+    data_xlsx['W\'=W-W Avg'] = data_xlsx['W'].subtract(data_xlsx['W Avg'][0])
+    
 
 
     # write over the octant_output.excel file
