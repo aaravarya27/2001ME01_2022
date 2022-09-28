@@ -48,7 +48,15 @@ def octact_identification(mod=5000):
     data_xlsx['V\'=V-V Avg'] = data_xlsx['V'].subtract(data_xlsx['V Avg'][0])
     data_xlsx['W\'=W-W Avg'] = data_xlsx['W'].subtract(data_xlsx['W Avg'][0])
     
+    # lambda function
+    # .apply() to pass a function and apply it to all rows
+    data_xlsx['Octant'] = data_xlsx.apply(lambda row: octant_assign(row["U'=U-U Avg"], row["V'=V-V Avg"], row["W'=W-W Avg"]), axis = 1)
 
+    # insert column 11
+    data_xlsx.insert(11, '', "", True)
+    data_xlsx.at[1,''] = 'User Input'
+
+   
 
     # write over the octant_output.excel file
     data_xlsx.to_excel('testfile.xlsx', index = False)
