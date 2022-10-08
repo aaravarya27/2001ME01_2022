@@ -205,7 +205,15 @@ def octact_identification(mod=5000):
             print('Error in Table: Unable to fill the mod transition count table')
             exit()
     
-   
+    try:
+        # Write over corresponding output file
+        data_xlsx.to_excel('output_octant_transition_identify.xlsx', index = False)
+    except PermissionError:
+        print('Permission Error: Cannot overwrite an opened file')
+        exit()
+    except:
+        print('Error in file: Could not overwrite')
+        exit()
 
 
 # check python version
