@@ -189,6 +189,24 @@ def octact_identification(mod=5000):
 
     index = range_total + 18 #index of 1st mod transition count heading
 
+    #Fill the tables using for loop for all ranges
+    for i in range (range_total+1): 
+        range_left = i*mod #define left bound of range
+        range_right = min(len_data_xlsx-1, ((i+1)*mod)-1) #define left bound of range
+
+        try:
+            table_transition(data_xlsx,range_left,range_right,index,octant)
+            value_transition(data_xlsx, range_left,range_right, len_data_xlsx-1, index)
+            index += 13 #increment by 13 for next table heading
+        except IndexError:
+            print('Index Error')
+            exit()
+        except:
+            print('Error in Table: Unable to fill the mod transition count table')
+            exit()
+    
+   
+
 
 # check python version
 from platform import python_version
