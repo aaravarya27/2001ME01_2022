@@ -20,6 +20,43 @@ def octant_assign(x,y,z):
 
     return oct # return integer value
 
+def table_transition(data_xlsx, mod, range_left, range_right, index, octant):
+    
+    try:
+        #empty heading
+        table_name = ""
+        #Assign Table name
+        if (range_left < 0):
+            table_name += "Overall Transition Count"
+        else:
+            table_name += "Mod Transition Count"
+            data_xlsx.iloc[index+1,13] = str(range_left) + '-' + str(range_right)
+
+        data_xlsx.iloc[index,12] = table_name
+        data_xlsx.iloc[index+1,13] = "To"
+        index += 2
+        data_xlsx.iloc[index,12] = "Count"
+        data_xlsx.iloc[index+1,11] = "From" 
+
+        #assign octant value as row and col headings
+        tempVar = 0 #temporary variable initialized to 0
+        for i in octant: #iterating in array [-4,-3,-2,-1,1,2,3,4]
+            data_xlsx.iloc[index+1+tempVar,12] = i
+            data_xlsx.iloc[index,13+tempVar] = i
+            tempVar += 1
+
+        index += 1
+
+        #initialize zero in all cells of the table
+        for row1 in range(0,8):
+            for col1 in range(0,8):
+                data_xlsx.iloc[index+row1,13+col1] = 0
+
+    #except block in case an error occurs anywhere in the above code
+    except:
+        print('Error in function: table_transition')
+        exit()
+
 def octact_identification(mod=5000):
 
     # read input excel file
@@ -97,7 +134,8 @@ def octact_identification(mod=5000):
             else: # to accomodate the case of no occurance of an octant in a particular range
                 data_xlsx.at[i+1 ,j] = 0
         temp = temp + mod
-
+    
+    table_transition(data_xlsx,mod,-1,-1,11,octant)
     # write over the octant_output.excel file
     data_xlsx.to_excel('testfile.xlsx', index = False)
 
