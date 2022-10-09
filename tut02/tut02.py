@@ -4,8 +4,8 @@ import math
 os.system('cls')
 
 # function to assign octant
-try:
-    def octant_assign(x,y,z):
+def octant_assign(x,y,z):
+    try:
         oct = 0 # initialization
         if(x>=0 and y>=0):
             oct = 1
@@ -21,8 +21,8 @@ try:
 
         return oct # return integer value
 
-#except block in case an error occurs anywhere in the above function
-except:
+    #except block in case an error occurs anywhere in the above function
+    except:
         print('Error in function: octant_assign')
         exit()
 
