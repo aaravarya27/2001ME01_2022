@@ -111,6 +111,13 @@ def octant_longest_subsequence_count():
             data_xlsx.iloc[i,13] = 0
             data_xlsx.iloc[i,14] = 0
 
+        #function call    
+        subsequence_octant(data_xlsx, len_data_xlsx-1, octant)
+
+    #except block in case an error occurs anywhere in the above function
+    except:
+        print('Error in function: octant_longest_subsequence_count')
+        exit()
 
 # check python version
 from platform import python_version
