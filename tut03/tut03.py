@@ -100,7 +100,13 @@ def octant_longest_subsequence_count():
         #list containing octant numbers
         octant = [1, -1, 2, -2, 3, -3, 4, -4]
 
-       
+        #insert values 1,-1,2,-2,3,-3,4,-4 in column 12
+        temp = 0 #temporary variable
+        for i in octant:
+            data_xlsx.iloc[temp,12] = i
+            temp += 1
+
+        
 
 # check python version
 from platform import python_version
