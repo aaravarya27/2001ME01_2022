@@ -139,7 +139,19 @@ except:
         print('Error in file: Could not open')
         exit()
 
+#function call
+octant_longest_subsequence_count()
 
+# Write over corresponding output file
+try:
+    data_xlsx.to_excel('output_octant_longest_subsequence.xlsx', index = False)
+
+except PermissionError:
+    print('Permission Error: Cannot overwrite an opened file')
+    exit()
+except:
+    print('Error in file: Could not overwrite')
+    exit()
 
 #This shall be the last lines of the code.
 end_time = datetime.now()
