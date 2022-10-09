@@ -106,7 +106,11 @@ def octant_longest_subsequence_count():
             data_xlsx.iloc[temp,12] = i
             temp += 1
 
-        
+        #initialize the table with 0 values since str + int concatenation is not allowed in python
+        for i in range(0,8):
+            data_xlsx.iloc[i,13] = 0
+            data_xlsx.iloc[i,14] = 0
+
 
 # check python version
 from platform import python_version
@@ -127,6 +131,7 @@ except FileNotFoundError:
 except:
         print('Error in file: Could not open')
         exit()
+
 
 
 #This shall be the last lines of the code.
