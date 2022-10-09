@@ -81,7 +81,26 @@ def octact_identification():
         print('Error in function: octact_identification')
         exit()
 
+def octant_longest_subsequence_count():
+    try:
+        octact_identification()
+        
+        #store length of dataframe 
+        len_data_xlsx = data_xlsx.shape[0]
 
+        # insert column empty 11
+        data_xlsx.insert(11, '', "", True)
+        # insert column 12 with heading Octant Number
+        data_xlsx.insert(12, 'Octant Number', "", True)
+        # insert column 13 with heading Longest Subsequent Length
+        data_xlsx.insert(13, 'Longest Subsequent Length', "", True)
+        # insert column 14 with Count
+        data_xlsx.insert(14, 'Count', "", True)
+            
+        #list containing octant numbers
+        octant = [1, -1, 2, -2, 3, -3, 4, -4]
+
+       
 
 # check python version
 from platform import python_version
@@ -102,7 +121,6 @@ except FileNotFoundError:
 except:
         print('Error in file: Could not open')
         exit()
-
 
 
 #This shall be the last lines of the code.
