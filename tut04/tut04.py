@@ -30,7 +30,7 @@ def octant_assign(x,y,z):
 
 def subsequence_octant(data_xlsx, len_data_xlsx, octant):
     try:
-       
+        time1 = 0 #initial value of starting time    
         count = 1 #initial value of count is 1 since atleast 1 occurance of an octant will be present  i.e. ith element
         for i in range(len_data_xlsx): #iterating over entire data set
             if(data_xlsx.iloc[i,10] == data_xlsx.iloc[i+1,10]): #if two successive octant values are same
@@ -39,18 +39,20 @@ def subsequence_octant(data_xlsx, len_data_xlsx, octant):
             else:
                 num = data_xlsx.iloc[i,10]
                 index = octant.index(num) #index of corrensponding octant number in the list octant [1,-1,2,-2,3,-3,4,-4]
-               
+                time2 = data_xlsx.iloc[i,0]
 
                 if(count == data_xlsx.iloc[index,13] ): #if longest subsequent count remains same
                     data_xlsx.iloc[index,14] += 1 #increment count of the longest subsequent count i.e. column 14 of corresponding octant number
-                  
+                    subsequenceTime[num].append([time1,time2]) #append a list in subsequentTime[] with start and end times
+
                 elif (count > data_xlsx.iloc[index,13]): #if longest subsequent count is greater than the previous one
                     data_xlsx.iloc[index,13] = count #new value of longest subsequent count in column 13 of corresponding octant number
                     data_xlsx.iloc[index,14] = 1 #reset count to 1 in coloum 14 of corresponding octant number
-                   
+                    subsequenceTime[num].clear() #reset list if new longest subsequence and found
+                    subsequenceTime[num].append([time1,time2]) #then append the start and end times
 
                 count = 1
-    
+                time1 = data_xlsx.iloc[i+1,0]
 
     #except block in case an error occurs anywhere in the above function
     except:
@@ -154,6 +156,8 @@ except:
 
 #list containing octant numbers
 octant = [1, -1, 2, -2, 3, -3, 4, -4]
+#empty list to store start and end times for each octant number
+subsequenceTime = [[],[],[],[],[],[],[],[],[]]
 
 
 # Write over corresponding output file
