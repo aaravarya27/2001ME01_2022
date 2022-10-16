@@ -146,7 +146,19 @@ def octant_longest_subsequence_count_with_range(octant, subsequenceTime):
             data_xlsx.iloc[t,18] = data_xlsx.iloc[index,14] 
             t += 1 
 
-           
+            #increment t to fill respective cells in next row with name Time, From and To
+            data_xlsx.iloc[t,16] = 'Time'
+            data_xlsx.iloc[t,17] = 'From'
+            data_xlsx.iloc[t,18] = 'To'
+            t += 1
+
+            #iterating from 0 to count
+            for j in range(0, data_xlsx.iloc[index,14]):
+                #fill start and end times of all longest subsequences in col 17 and 18 respectively
+                data_xlsx.iloc[t,17] = subsequenceTime[i][j][0]
+                data_xlsx.iloc[t,18] = subsequenceTime[i][j][1]
+                t +=1
+
     #except block in case an error occurs anywhere in the above function
     except:
         print('Error in function: octant_longest_subsequence_count_with_range')
