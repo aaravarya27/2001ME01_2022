@@ -132,7 +132,25 @@ def octant_longest_subsequence_count():
         print('Error in function: octant_longest_subsequence_count')
         exit()
               
+def octant_longest_subsequence_count_with_range(octant, subsequenceTime):
+    try:
+        #function call
+        octant_longest_subsequence_count()   
 
+        t = 0
+        for i in octant: #iterating over the list octant
+            index = octant.index(i) #stores the index of each octant number in octant[]
+            data_xlsx.iloc[t,16] = i #assign column 16 with respective octant number
+            #copy longest subsequece and count from previous table (col 12,13,14)
+            data_xlsx.iloc[t,17] = data_xlsx.iloc[index,13] 
+            data_xlsx.iloc[t,18] = data_xlsx.iloc[index,14] 
+            t += 1 
+
+           
+    #except block in case an error occurs anywhere in the above function
+    except:
+        print('Error in function: octant_longest_subsequence_count_with_range')
+        exit()
 
 # check python version
 from platform import python_version
@@ -158,7 +176,8 @@ except:
 octant = [1, -1, 2, -2, 3, -3, 4, -4]
 #empty list to store start and end times for each octant number
 subsequenceTime = [[],[],[],[],[],[],[],[],[]]
-
+#function call
+octant_longest_subsequence_count_with_range(octant, subsequenceTime)
 
 # Write over corresponding output file
 try:
