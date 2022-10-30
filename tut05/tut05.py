@@ -29,7 +29,34 @@ def octant_assign(x,k,z):
         print('Error in function: octant_assign')
         exit()
 
+# function to count each rank and rank1 octant ID and Name
+def octant_frequency(data_xlsx, range_total, octant_name_id_mapping, octant):
+    try:
+        c = -1 #counter variable
+        #while loop only for overall count row
+        while(c < 0):
+            oct = {} # empty dictionary to store octant with corresponding count value
+            t = 0
+            for i in octant:
+                oct[i] = data_xlsx.iloc[0, 13+t]
+                t += 1 # increment for next octant number
 
+            oct = dict(sorted(oct.items(), key=lambda item: item[1], reverse=True)) # decreasingly sorted using lambda function
+
+            t = 1
+            for i in oct:
+                data_xlsx.at[0,'Rank ' + str(i)] = t #since oct is sorted, rank will be assigned in corresponding order
+                if(t == 1): # if rank is 1 then fill column 29 and 30
+                    data_xlsx.at[0,'Rank1 Octant ID'] = i 
+                    data_xlsx.at[0,'Rank1 Octant Name'] = octant_name_id_mapping[str(i)] #Name for corresponding key
+                t += 1
+            c +=1 #new counter value => 0 hence shifts to else condition
+
+        
+    #except block in case an error occurs anywhere in the above function
+    except:
+            print('Error while executing octant_frequency function')
+            exit()
 
 def octant_identification(mod=5000):
     try:
