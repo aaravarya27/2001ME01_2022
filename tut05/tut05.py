@@ -7,16 +7,16 @@ os.system('cls')
 start_time = datetime.now()
 
 # function to assign octant
-def octant_assign(x,y,z):
+def octant_assign(x,k,z):
     try:
         octant = 0 # initialization
-        if(x>=0 and y>=0):
+        if(x>=0 and k>=0):
             octant = 1
-        elif(x<0 and y>=0):
+        elif(x<0 and k>=0):
             octant = 2
-        elif(x<0 and y<0):
+        elif(x<0 and k<0):
             octant = 3
-        elif(x>=0 and y<0):
+        elif(x>=0 and k<0):
             octant = 4
 
         if(z<0): # reduce number of if conditions
@@ -28,12 +28,11 @@ def octant_assign(x,y,z):
     except:
         print('Error in function: octant_assign')
         exit()
-        
-def octact_identification(mod=5000):
-    try:
-        #store length of dataframe 
-        len_data_xlsx = data_xlsx.shape[0]
 
+
+
+def octant_identification(mod=5000):
+    try:
         # insert U Avg, V Avg & W Avg columns with blank values using .insert()
         data_xlsx.insert(4, 'U Avg', "", True)
         data_xlsx.insert(5, 'V Avg', "", True)
@@ -68,13 +67,6 @@ def octact_identification(mod=5000):
         data_xlsx.at[1, 'Octant ID'] = 'Mod ' + str(mod) # display mod as string using str()
         data_xlsx.at[2, 'Octant ID'] = '0 - ' + str(mod - 1) # range goes from 0 to mod - 1
 
-        num = len_data_xlsx/mod
-        range_total = math.floor(num) # total number of ranges
-                                    # .floor() works as greatest integer function
-        # special case
-        if(mod == 29745 or mod == 1):
-            range_total -= 1
-
         temp = 0 # create and initialize a temporary variable
 
         # for loop to get ranges
@@ -84,9 +76,6 @@ def octact_identification(mod=5000):
             if(range_right >= len_data_xlsx): # right value for cases where num != 0
                 range_right = len_data_xlsx - 1
             data_xlsx.at[i+2, 'Octant ID'] = str(range_left) + '-' + str(range_right)
-
-        # create a list with octant values
-        octant = [1, -1, 2, -2, 3, -3, 4, -4]
         
         # iterating over objects of list octant
         for octant_number in octant:
@@ -103,6 +92,7 @@ def octact_identification(mod=5000):
                 else: # to accomodate the case of no occurance of an octant in a particular range
                     data_xlsx.at[i+1 ,j] = 0
             temp = temp + mod
+    #except block in case an error occurs anywhere in the above function
     except:
         print('Error in function: octant_identification')
         exit()
@@ -128,8 +118,20 @@ except:
     exit()
 
 mod = 5000 # hardcoded mod value
-# octant_range_names() # call the function
-octact_identification(mod)
+#store length of dataframe 
+len_data_xlsx = data_xlsx.shape[0]
+
+num = len_data_xlsx/mod
+range_total = math.floor(num) # total number of ranges
+                              # .floor() works as greatest integer function
+# special case
+if(mod == 29745 or mod == 1):
+    range_total -= 1
+
+# create a list with octant values
+octant = [1, -1, 2, -2, 3, -3, 4, -4]
+
+octant_range_names(range_total, octant)
 
 try:
     # Write over corresponding output file
