@@ -142,6 +142,45 @@ def octant_identification(mod=5000):
         print('Error in function: octant_identification')
         exit()
 
+def octant_range_names(range_total,octant):
+    try:
+        octant_identification(mod) # function call
+
+        #insert columns 21 to 28 with name Rank i where i is elements of [1,-1,2,-2,3,-3,4,-4]
+        col = 21
+        for i in octant:
+            data_xlsx.insert(col, 'Rank ' + str(i), "", True)
+            col += 1
+
+        # insert column 29 and 30
+        data_xlsx.insert(29, 'Rank1 Octant ID', "", True) 
+        data_xlsx.insert(30, 'Rank1 Octant Name', "", True) 
+
+        # given dictionary with names corresponding to each octant
+        octant_name_id_mapping = {'1' : "Internal outward interaction",'-1': "External outward interaction",'2' : "External Ejection",'-2': "Internal Ejection",'3' : "External inward interaction",'-3': "Internal inward interaction",'4' : "Internal sweep",'-4': "External sweep"}
+
+        # Function call for assigning ranks & rank1 Octant ID and Octant Name
+        octant_frequency(data_xlsx, range_total, octant_name_id_mapping, octant)
+        
+        # Headings in corresponding cells for count of Rank 1 for mod Values
+        index = range_total + 6 # To ensure 3 row spacing after mod table
+        data_xlsx.iloc[index, 13] = 'Octant ID'
+        data_xlsx.iloc[index, 14] = 'Octant Name'
+        data_xlsx.iloc[index, 15] = 'Count of Rank 1 mod values'
+        
+        # Create a list and store rank1 count for each octant ID
+        countRank1 = [0,0,0,0,0,0,0,0] #list of size 8 initialized to 0
+        for i in range (0, range_total+1): # iterating over number of ranges for corresponding mod value
+            #evaluates index of Rank1 octant ID from octant
+            #and increases count of that index in the list countRank1
+            countRank1[octant.index(data_xlsx.at[i+2,'Rank1 Octant ID'])] += 1 
+            
+        
+
+    #except block in case an error occurs anywhere in the above function
+    except:
+        print('Error in function: octant_range_names')
+        exit()
 
 # check python version
 from platform import python_version
