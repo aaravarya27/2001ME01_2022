@@ -175,7 +175,13 @@ def octant_range_names(range_total,octant):
             #and increases count of that index in the list countRank1
             countRank1[octant.index(data_xlsx.at[i+2,'Rank1 Octant ID'])] += 1 
             
-        
+        # Insert the values from list countRank1
+        i = 0
+        for octant, name in octant_name_id_mapping.items(): # iterating over values of dictionary octant_name_id_mapping
+            data_xlsx.iloc[index+1+i, 13] = octant # insert octant ID
+            data_xlsx.iloc[index+1+i, 14] = name # insert corresponding octant name
+            data_xlsx.iloc[index+1+i, 15] = countRank1[i] # insert count of Rank1 for corresponding Octant ID
+            i+=1 #increment for next octant ID
 
     #except block in case an error occurs anywhere in the above function
     except:
