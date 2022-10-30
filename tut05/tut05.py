@@ -52,7 +52,25 @@ def octant_frequency(data_xlsx, range_total, octant_name_id_mapping, octant):
                 t += 1
             c +=1 #new counter value => 0 hence shifts to else condition
 
-        
+        #else condition for mod count rows
+        else:
+            for i in range(range_total+1): # number of rows for mod count
+                octMod = {} # empty dictionary to store octant with corresponding count value
+                t = 0
+                for j in octant: 
+                    octMod[j] = data_xlsx.iloc[i+2, 13+t] #store key value pair for each iteration of mod count
+                    t += 1 # increment for next octant number
+
+                octMod = dict(sorted(octMod.items(), key=lambda item: item[1], reverse=True)) # decreasingly sorted using lambda function
+
+                t = 1
+                for k in octMod: #since octMod is sorted, rank will be assigned in corresponding order
+                    data_xlsx.at[i+2,'Rank ' + str(k)] = t
+                    if(t == 1): # if rank is 1 then fill column 29 and 30
+                        data_xlsx.at[i+2,'Rank1 Octant ID'] = k
+                        data_xlsx.at[i+2,'Rank1 Octant Name'] = octant_name_id_mapping[str(k)] #Name for corresponding key 
+                    t += 1
+
     #except block in case an error occurs anywhere in the above function
     except:
             print('Error while executing octant_frequency function')
