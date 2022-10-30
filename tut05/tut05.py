@@ -225,7 +225,7 @@ octant_range_names(range_total, octant)
 
 try:
     # Write over corresponding output file
-    data_xlsx.to_excel('test.xlsx', index = False)
+    data_xlsx.to_excel('octant_output_ranking_excel.xlsx', index = False)
 except PermissionError:
     print('Permission Error: Cannot overwrite an opened file')
     exit()
