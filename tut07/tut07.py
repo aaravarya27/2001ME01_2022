@@ -527,7 +527,8 @@ def octant_identification(df, output, mod=5000):
     #function call for formatting the output file
     formatter(range_total, output) 
 
-
+#function to read and process multiple input files 
+def octant_analysis(mod):
     try:
 
         dirc = "input"
