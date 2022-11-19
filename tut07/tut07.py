@@ -339,7 +339,8 @@ def octant_longest_subsequence_count_with_range(df, octant, subsequenceTime):
         print('Error in function: octant_longest_subsequence_count_with_range')
         exit()
 
-
+#function for formatting
+def formatter(range_total, output):
     try:
         st = Side(style='thin')
         sr = Side(style=None)
