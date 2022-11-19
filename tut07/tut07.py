@@ -154,6 +154,83 @@ def octant_rank(df, octant, range_total):
         exit()
 
 #function to create empty table of transition count
+def table_transition(df, range_left, range_right, index, octant):
+
+    try:
+
+        #empty heading
+        table_name = ""
+        #Assign Table name
+        if (range_left < 0): #initialized to -1 later
+            df.insert(32, '', "", True)
+            df.insert(33, '', "", True)
+            df.insert(34, 'Overall Transition Count', "", True)
+            df.insert(35, '', "", True)
+            table_name += "Overall Transition Count"
+        else:
+            table_name += "Mod Transition Count"
+            df.iloc[index+1,34] = str(range_left) + '-' + str(range_right) 
+
+        df.iloc[index,34] = table_name
+        df.iloc[index+1,35] = "To"
+        index += 2
+        df.iloc[index,34] = "Octant #"
+        df.iloc[index+1,33] = "From" 
+
+        #assign octant value as row and col headings
+        tempVar = 0 #temporary variable initialized to 0
+        for i in octant: #iterating in list octant
+            if(range_left < 0):
+                df.insert(36+tempVar, '', "", True)
+
+            df.iloc[index+1+tempVar,34] = i #row headings
+            df.iloc[index,35+tempVar] = i #column headings
+            tempVar += 1
+
+        index += 1
+
+        #initialize zero in all cells of the table since str + int concatenation is not allowed while increasing count value
+        for row1 in range(0,8):
+            for col1 in range(0,8):
+                df.iloc[index+row1,35+col1] = 0
+
+    #except block in case an error occurs anywhere in the above function
+    except:
+        print('Error in function: table_transition')
+        exit()
+
+#function to count transitions
+def value_transition(df, range_left, range_right, len_df, index):
+
+    try:
+        if(range_right != len_df):
+            range_right += 1
+
+        #assign octant value of two successive data points to var1 and var2 respectively
+        for i in range(range_left,range_right):
+            var1 = df.iloc[i,10]
+            var2 = df.iloc[i+1,10]
+
+            #if negative octant, we consider modulus of the value
+            if (var1 < 0):
+                row1 = 2*(abs(var1)-1)+1 #row number = 1,3,5,7 for -1,-2,-3,-4 respectively
+            else:
+                row1 = 2*(var1-1) #row number = 0,2,4,6 for 1,2,3,4 respectively
+
+            #same in case of columns
+            if(var2<0):
+                col = 2*(abs(var2)-1)+36
+            else:
+                col = 2*(var2-1)+35      
+            
+            df.iloc[row1+index+3,col] += 1 #increase count of octant by 1 for each transition and assign in dedicated cell using .iloc[]
+
+    #except block in case an error occurs anywhere in the above code
+    except:
+        print('Error in function: value_transition')
+        exit()
+
+#function to count longest subsequence length and count
 
 #function for pre-processing
 def octant_identification(df, output, mod=5000):
