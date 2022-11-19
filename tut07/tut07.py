@@ -231,6 +231,213 @@ def value_transition(df, range_left, range_right, len_df, index):
         exit()
 
 #function to count longest subsequence length and count
+def subsequence_octant(df, len_df, octant, subsequenceTime):
+    try:
+        time1 = 0 #initial value of starting time    
+        count = 1 #initial value of count is 1 since atleast 1 occurance of an octant will be present  i.e. ith element
+        for i in range(len_df): #iterating over entire data set
+            if(df.iloc[i,10] == df.iloc[i+1,10]): #if two successive octant values are same
+                count += 1 #increase count by 1 for (i+1)th element
+            
+            else:
+                num = df.iloc[i,10]
+                index = octant.index(num) #index of corrensponding octant number in the list octant [1,-1,2,-2,3,-3,4,-4]
+                time2 = df.iloc[i,0]
+
+                if(count == df.iloc[index,45] ): #if longest subsequent count remains same
+                    df.iloc[index,46] += 1 #increment count of the longest subsequent count i.e. column 46 of corresponding octant number
+                    subsequenceTime[num].append([time1,time2]) #append a list in subsequentTime[] with start and end times
+
+                elif (count > df.iloc[index,45]): #if longest subsequent count is greater than the previous one
+                    df.iloc[index,45] = count #new value of longest subsequent count in column 45 of corresponding octant number
+                    df.iloc[index,46] = 1 #reset count to 1 in coloum 46 of corresponding octant number
+                    subsequenceTime[num].clear() #reset list if new longest subsequence and found
+                    subsequenceTime[num].append([time1,time2]) #then append the start and end times
+
+                count = 1
+                time1 = df.iloc[i+1,0]
+
+    #except block in case an error occurs anywhere in the above function
+    except:
+        print('Error in function: subsequence_octant')
+        exit()
+
+#function for creating empty table of longest subsequent count
+def octant_longest_subsequence_count(df,len_df, octant, subsequenceTime):
+    try:
+
+        # insert column empty 43
+        df.insert(43, '', "", True)
+        # insert column 44 with heading Octant Number
+        df.insert(44, 'Octant ##', "", True)
+        # insert column 45 with heading Longest Subsequent Length
+        df.insert(45, 'Longest Subsequent Length', "", True)
+        # insert column 46 with Count
+        df.insert(46, 'Count', "", True)
+        # insert empty column 47 
+        df.insert(47, '', "", True)
+        # insert column 48 with Octant Number
+        df.insert(48, 'Octant ###', "", True)
+        # insert column 49 with heading Longest Subsequent Length
+        df.insert(49, 'Longest Subsequent Length', "", True)
+        # insert column 50 with Count
+        df.insert(50, 'Count', "", True)
+
+        #insert values 1,-1,2,-2,3,-3,4,-4 in column 12
+        temp = 0 #temporary variable
+        for i in octant:
+            df.iloc[temp,44] = i
+            temp += 1
+
+        #initialize the table with 0 values since str + int concatenation is not allowed in python
+        for i in range(0,8):
+            df.iloc[i,45] = 0
+            df.iloc[i,46] = 0
+
+        #function call    
+        subsequence_octant(df, len_df-1, octant, subsequenceTime)
+
+    #except block in case an error occurs anywhere in the above function
+    except:
+        print('Error in function: octant_longest_subsequence_count')
+        exit()
+
+#function for longest subsequent count with range            
+def octant_longest_subsequence_count_with_range(df, octant, subsequenceTime):
+    try:
+
+        #store length of dataframe 
+        len_df = df.shape[0]
+
+        #function call
+        octant_longest_subsequence_count(df,len_df, octant, subsequenceTime)   
+
+        t = 0
+        for i in octant: #iterating over the list octant
+            index = octant.index(i) #stores the index of each octant number in octant[]
+            df.iloc[t,48] = i #assign column 48 with respective octant number
+            #copy longest subsequece and count from previous table (col 45,46,47)
+            df.iloc[t,49] = df.iloc[index,45] 
+            df.iloc[t,50] = df.iloc[index,46] 
+            t += 1 
+
+            #increment t to fill respective cells in next row with name Time, From and To
+            df.iloc[t,48] = 'Time'
+            df.iloc[t,49] = 'From'
+            df.iloc[t,50] = 'To'
+            t += 1
+
+            #iterating from 0 to count
+            for j in range(0, df.iloc[index,46]):
+                #fill start and end times of all longest subsequences in col 49 and 50 respectively
+                df.iloc[t,49] = subsequenceTime[i][j][0]
+                df.iloc[t,50] = subsequenceTime[i][j][1]
+                t +=1
+
+    #except block in case an error occurs anywhere in the above function
+    except:
+        print('Error in function: octant_longest_subsequence_count_with_range')
+        exit()
+
+
+    try:
+        st = Side(style='thin')
+        sr = Side(style=None)
+        tb = Border(left=st, right=st, top=st, bottom=st) #defining thin border on all sides
+        nb = Border(left=sr, right=sr, top=sr, bottom=sr) #defining no border on all sides
+        hl = PatternFill(patternType='solid', fgColor='FFFF00') #defining highlights
+        f = Font(bold = False) #unbolding
+
+        #opening new workbook 
+        wb = openpyxl.load_workbook(output)
+        sheet = wb['Sheet1']
+
+        for i in range(1, 52):
+            sheet.cell(row = 1, column = i).font = f #unbolding all headings
+
+        #removing borders from headings
+        for i in range(1, 14): 
+            sheet.cell(row = 1, column = i).border = nb 
+
+        for i in range(33, 45):
+            sheet.cell(row = 1, column = i).border = nb 
+            
+        sheet.cell(row = 1, column = 48).border = nb 
+        sheet.cell(row = 1, column = 52).border = nb 
+        
+        #thin border on count and rank tables
+        for i in range(2, range_total+4):
+            for j in range(14,33):
+                sheet.cell(row = i, column = j).border = tb
+
+        #thin border on count of rank1 values table
+        for i in range(range_total+7, range_total+16):
+            for j in range(29,32):
+                sheet.cell(row = i, column = j).border = tb
+        
+        #thin border on overall transition count
+        for i in range(3, 12):
+            for j in range(35,44):
+                maxval1 = sheet.cell(row = i, column = j).border = tb
+
+        #thin border on mod transition count
+        index = 0
+        for i in range(0,range_total+1):
+            for j in range(0,9):
+                for k in range (35,44):
+                    sheet.cell(row = index+17+j, column = k).border = tb
+            index += 13
+        
+        #thin border on longest subsequent count
+        for i in range(2,10):
+            for j in range(45,48):
+                sheet.cell(row = i, column = j).border = tb
+
+        #thin border on longest subsequent count with range
+        sum = 0
+        for i in range (2,10):
+            sum += sheet.cell(row = i, column = 47).value
+            for i in range(2, sum+18):
+                for j in range(49,52):
+                        sheet.cell(row = i, column = j).border = tb
+
+        #highlighting rank 1 cells
+        for i in range(2,range_total+4):
+            for j in range(23, 31):
+                if(sheet.cell(row = i, column = j).value == 1):
+                    sheet.cell(row = i, column = j).fill = hl
+
+        #highlighting max value in overall transition count
+        maxval1 = 0
+        for i in range(4, 12):
+            for j in range(35,44):
+                if(maxval1 < sheet.cell(row = i, column = j).value):
+                    maxval1 = sheet.cell(row = i, column = j).value
+            for j in range(35,44):
+                if(sheet.cell(row = i, column = j).value == maxval1):
+                    sheet.cell(row = i, column = j).fill = hl
+            maxval1 = 0
+
+        #highlighting max value in mod transition count
+        maxval2 = 0
+        index = 0
+        for i in range(0,range_total+1):
+            for j in range(1,9):
+                for k in range (35,44):
+                    if(maxval2 < sheet.cell(row = index+17+j, column = k).value):
+                        maxval2 = sheet.cell(row = index+17+j, column = k).value        
+                for k in range (35,44):
+                    if(sheet.cell(row = index+17+j, column = k).value == maxval2):
+                        sheet.cell(row = index+17+j, column = k).fill = hl
+                maxval2 = 0
+            index += 13
+
+        wb.save(output)
+
+    #except block in case an error occurs anywhere in the above function
+    except:
+        print('Error in function: formatter')
+        exit()
 
 #function for pre-processing
 def octant_identification(df, output, mod=5000):
@@ -319,8 +526,7 @@ def octant_identification(df, output, mod=5000):
     #function call for formatting the output file
     formatter(range_total, output) 
 
-#function to read and process multiple input files 
-def octant_analysis(mod):
+
     try:
 
         dirc = "input"
