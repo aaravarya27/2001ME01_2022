@@ -48,7 +48,29 @@ def attendance_report():
 
     # lectures.remove('15-08-2022') # 15th August if marked as holiday
 
-    
+    # create lists roll and name from registred students data
+    consolidated = pd.DataFrame()
+    roll = []
+    name = []
+    for i in reg:
+        roll.append(i.split(" ", 1)[0])
+        name.append(i.split(" ",1)[1])
+
+    # create columns for roll and name in consolidated report
+    consolidated["Roll"] = pd.Series(roll)
+    consolidated["Name"] = pd.Series(name)
+    consolidated.index = pd.Index(consolidated["Roll"].values) #change index to read through roll no
+
+    #fill all rows with A initially for each lecture date
+    for i in lectures:
+        consolidated[i] = 'A' 
+
+    #create other required columns 
+    actuallectures = len(lectures) 
+    consolidated["Actual Lecture Taken"] = actuallectures
+    consolidated["Total Real"] = pd.NA
+    consolidated["% Attendance"] = pd.NA
+
    
 
 #check python version
