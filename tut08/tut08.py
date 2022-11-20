@@ -293,7 +293,45 @@ def scorecard():
             #switching for next inning
             players1, players2 = players2, players1
             
+            #calculating bowler economy and overs bowled
+            for key in bowl.keys():
+                bowl[key]['ECO'] = round(6.00*bowl[key]['R'] / bowl[key]['O'], 1)
+                bowl[key]['O'] = bowl[key]['O'] // 6.00 + (bowl[key]['O']%6.00) / 10
             
+            #calculating batsman strike rate
+            for key in bat.keys():
+                bat[key]['SR'] = round(100* bat[key]['R'] / bat[key]['B'], 2)
+            
+            #separate dataframes from batting and bowling
+            df1 = pd.DataFrame.from_dict(bat, orient='index')
+            df2 = pd.DataFrame.from_dict(bowl, orient='index')
+            
+            df1_total = df1.sum(axis='index')
+            df2_total = df2.sum(axis='index')
+
+            #total runs, wkts and balls in the inning
+            total = int(df1_total['R'])
+            wkts = int(df2_total['W'])
+            balls = df2_total['O']
+            
+            #row for extras and total score
+            extras = br + lbr + wdr + nbr
+            e = f'{extras} (b:{br}, lb:{lbr}, w:{wdr}, nb:{nbr})'
+            t = f'{extras+total} ({wkts} wkts, {balls} Ov)'
+            
+            df1.loc['Extras'] = ['', e, '', '', '', '']
+            df1.loc['Total'] = ['', t, '', '', '', '']
+
+            df1.reset_index(inplace=True)
+            df1.rename(columns={'index':'Batsman'}, inplace=True)
+
+            df2.reset_index(inplace=True)
+            df2.rename(columns={'index':'Bowler'}, inplace=True)
+
+            outputfile = 'Scorecard.txt'
+
+            
+
 from platform import python_version
 ver = python_version()
 
