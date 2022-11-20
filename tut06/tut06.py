@@ -71,7 +71,37 @@ def attendance_report():
     consolidated["Total Real"] = pd.NA
     consolidated["% Attendance"] = pd.NA
 
-   
+    #start and endtime of the class
+    starttime = datetime(2022, 1, 1, 14, 0).time()
+    endtime = datetime(2022, 1, 1, 15, 0).time()
+
+    #creating individual reports by iterating over the list of registered students
+    for i in reg:
+        df = pd.DataFrame() #new dataframe
+        # get roll and name
+        roll = i.split(" ", 1)[0] 
+        name = i.split(" ", 1)[1]
+        
+        #fill lecture dates, roll and name
+        df["Date"] = pd.Series([pd.NA] + lectures)
+        df["Roll"] = pd.Series([roll])
+        df["Name"] = pd.Series([name])
+
+        #create other required columns and initialize to zero
+        df["Total Attendance Count"] = 0
+        df["Real"] = 0
+        df["Duplicate"] = 0
+        df["Invalid"] = 0
+        df["Absent"] = 0
+
+        #one empty cell in each
+        df.at[0, "Total Attendance Count"] = pd.NA
+        df.at[0, "Real"] = pd.NA
+        df.at[0, "Duplicate"] = pd.NA
+        df.at[0, "Invalid"] = pd.NA
+        df.at[0, "Absent"] = pd.NA
+        
+        
 
 #check python version
 from platform import python_version
