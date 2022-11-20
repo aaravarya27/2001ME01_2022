@@ -134,7 +134,18 @@ def attendance_report():
         #writing each csv in excel file
         df.to_excel("./output/" + roll + ".xlsx", index = False)
 
-        
+        #marking P if real attendance exists
+        sum = 0
+        for date in lectures:
+            if(df.iloc[lectures.index(date) + 1, 4] == 1):
+                consolidated.at[roll, date] = "P"
+                sum += 1
+
+        consolidated.at[roll, "Total Real"] = sum #total real is sum of real
+        consolidated.at[roll, "% Attendance"] = round(sum*100/len(lectures), 2)
+
+    #writing consolidated report to excel        
+    consolidated.to_excel("./output/attendance_report_consolidated.xlsx", index = False)
 
 #check python version
 from platform import python_version
