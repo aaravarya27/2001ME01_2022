@@ -83,6 +83,41 @@ def scorecard():
             print('Error in file: Could not open ', ind_inns)
             exit()
 
+        #empty dictionary for batting and bowling data
+        bat = {}
+        bowl = {}
+        
+        #dictionary for batsman
+        dict1 = {
+                    'out': 'not out', 
+                    'R': 0, 
+                    'B': 0, 
+                    '4s': 0, 
+                    '6s': 0, 
+                    'SR': 0
+                    }
+
+        #dictionary for bowler
+        dict2 = {
+                    'O': 0, 
+                    'M': 0, 
+                    'R': 0, 
+                    'W': 0, 
+                    'NB': 0, 
+                    'WD': 0, 
+                    'ECO': ''
+                    }
+
+        #defining other variables for extras, wickets, total, balls and powerplay
+        extras, total, wkts, balls = 0, 0, 0, 0
+        nbr, lbr, br, wdr = 0, 0, 0, 0
+        fallwkts, wickets = [], 0
+        ppo, ppr, ppb = 0, 0, 0
+
+        #name of teams Pakistan and India
+        pak = team1.split(" ")[0]
+        ind = team2.split(" ")[0]
+        
         
 
 from platform import python_version
