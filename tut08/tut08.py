@@ -165,8 +165,135 @@ def scorecard():
                 if (bowler not in bowl.keys()):
                     bowl[bowler] = dict2.copy()
                 
+                #case of 6
+                if (case == 'six'):
+                    bat[batsman]['R'] += 6 #scored by batsman
+                    bat[batsman]['6s'] += 1 #6 tally increased by 1
+                    bowl[bowler]['R'] += 6 #added to bowlers account
                 
+                #case of 4
+                elif (case == 'four'):
+                    bat[batsman]['R'] += 4
+                    bat[batsman]['4s'] += 1
+                    bowl[bowler]['R'] += 4
 
+                #case of other runs scored including zero
+                elif ('run' in case and 'out' not in case):
+                    if (case.split()[0] == 'no'): 
+                        bat[batsman]['R'] += 0
+                        bowl[bowler]['R'] += 0
+                    else:
+                        bat[batsman]['R'] += int(case.split()[0])
+                        bowl[bowler]['R'] += int(case.split()[0])
+
+                #case of wide and wide+runs
+                elif ('wide' in case):
+                    if ('wides' in case):
+                        wdr += int(case[0])
+                        bowl[bowler]['R'] += int(case[0]) #added to bowlers runs tally
+                        bowl[bowler]['WD'] += int(case[0]) #added to bowlers wides tally
+                    else:
+                        wdr += 1
+                        bowl[bowler]['R'] += 1
+                        bowl[bowler]['WD'] += 1
+
+                #case of wickets   
+                elif ('out' in case):
+                    bowl[bowler]['W'] += 1 #added to bowlers wkt tally
+                    if ('caught' in case and 'bowled' in case): #caught and bowled case
+                        bat[batsman]['out'] = 'c and b ' + bowler
+
+                    elif ('bowled' in case): #bowled case
+                        bat[batsman]['out'] = 'b ' + bowler
+
+                    elif ('caught' in case):
+                        c = case.lower().split('by')[-1].strip()
+                        for player in players2:
+                            if c in player:
+                                c = player.strip() #getting full name of bowler from players list
+                        bat[batsman]['out'] = 'c ' + c + ' b ' + bowler #caught and bowled by different people
+
+                    elif ('lbw' in case):
+                        bat[batsman]['out'] = 'lbw b ' + bowler #lbw case
+
+                    elif ('stumped' in case):
+                        for player in players2:
+                            if wk in player:
+                                wk = player.strip() #getting full name of wk from players list
+                        bat[batsman]['out'] = 'st' + wk + ' b ' + bowler #stumped case
+
+                    elif ('run' in case):
+                        bowl[bowler]['W'] -= 1 #runout does not go in bowlers wkt tally
+                        current = re.search('[^!]+!!\s+(\d).+', ball).group(1).strip()
+                        bat[batsman]['R'] += int(current) #adding runs to batsman before getting runout
+                        dismissed = case.lower().split()[1].strip()
+                        for player in players1:
+                            if dismissed in player:
+                                dismissed = player.strip() #geting full name of thrower from players list
+                        throw = re.search('\(([^\(\)]+)\)\s+[\d\s\(\)]+\[.+\]$', ball).group(1).strip()
+                        bat[dismissed]['out'] = 'run out (' + throw + ')' #run out case
+
+                eve = re.search('[^,]+,?([^,]+),?([\w\s]+)[,|!!]', ball)
+                #case of byes and leg byes
+                if ('bye' in eve.group(1).lower().strip()):
+                    current = eve.group(2).lower().strip()
+                    if ('run' in current):
+                        current = int(current[0])
+
+                    elif ('four' == current):
+                        current = 4
+
+                    elif ('six' == current):
+                        current = 6
+
+                    if ('leg' in eve.group(1).lower().strip()):
+                        lbr += current
+
+                    else:
+                        br += current
+
+                #case of no ball
+                if ('no ball' in eve.group(1).lower().strip()):
+                    current = eve.group(2).lower().strip()
+                    if ('run' in current):
+                        current = int(nbr[0])
+
+                    elif ('four' == current):
+                        current = 4
+                        bat[batsman]['4s'] += 1
+
+                    elif ('six' == current):
+                        current = 6
+                        bat[batsman]['6s'] += 1
+                        
+                    nbr += 1
+                    bat[batsman]['R'] += current
+                    bowl[bowler]['R'] += current + 1
+
+                if ('wide' not in case and 'no ball' not in case):
+                    bat[batsman]['B'] += 1
+                    bowl[bowler]['O'] += 1
+
+                    #balls in powerplay
+                    if (float(ball.split(' ')[0].strip()) < 6.1):
+                        ppb += 1
+
+                if ('out' in case):
+                    wickets += 1
+                    extras = br + lbr + wdr + nbr #extras is sum of nb, wd, byes and legbyes
+                    temp = pd.DataFrame.from_dict(bat, orient='index').sum(axis='index')['R']
+                    num = ball.split(' ')[0].strip()
+                    fallwkts.append(f'{temp + extras}-{wickets} ({batsman}, {num})') #fall of wickets
+
+                if (float(ball.split(' ')[0].strip()) < 6.1):
+                    var1 = int(pd.DataFrame.from_dict(bat, orient='index').sum(axis='index')['R']) #runs in powerplay excluding extras
+                    var2 = br + lbr + wdr + nbr #extras in powerplay
+                    ppr = var1 + var2 #total runs in powerplay
+            
+            #switching for next inning
+            players1, players2 = players2, players1
+            
+            
 from platform import python_version
 ver = python_version()
 
