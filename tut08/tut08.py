@@ -330,7 +330,58 @@ def scorecard():
 
             outputfile = 'Scorecard.txt'
 
-            
+            #appending in outputfile
+            with open(outputfile, "a+") as text_file:
+
+                #batting stats
+                sr = df1.to_markdown(tablefmt='plain', index=False).split('\n')
+                l = int(len(sr[0]))
+                pak += ' Innings' #innings heading
+                score = f'{extras+total}-{wkts} ({balls} Ov)'
+
+                print(f'{pak:<{l//2}}' + f'{score:>{l//2}}', file = text_file)
+                print('', file = text_file)
+                
+                for i in sr:
+                    print(i, file = text_file)
+
+                print('', file = text_file)
+                
+                #batsman who did not bat
+                if (wkts != 10):
+                    print('Did not Bat', file = text_file)
+                    temp = []
+
+                    for player in players2:
+                        if player not in df1['Batsman'].to_list():
+                            temp.append(player) # getting full name from players list
+
+                    print(', '.join(temp), file = text_file)
+                    print('', file = text_file)
+                
+                #fall of wkts
+                print('Fall of Wickets', file = text_file)
+                print(', '.join(fallwkts), file = text_file)
+                print('', file = text_file)
+
+                #bowling stats
+                bowlerstats = df2.to_markdown(tablefmt='plain', index=False).split('\n')
+                
+                for i in bowlerstats:
+                    print(i, file = text_file)
+                print('', file = text_file)
+
+                #pp stats
+                ppo = ppb // 6.00 + (ppb % 6.00) / 10
+                print(format('Powerplays', f'<{l//3}') + format('Overs', f'^{l//3}') + format('Run', f'>{l//3}'), file = text_file)
+                print(format('Mandatory', f'<{l//3}') + format(f'0.1-{ppo}', f'^{l//3}') + format(f'{ppr}', f'>{l//3}'), file = text_file)
+                print('', file = text_file)
+                
+            pak, ind = ind, pak #switching for heading
+
+    except:
+        print('Error in function: scorecard')
+        exit()
 
 from platform import python_version
 ver = python_version()
