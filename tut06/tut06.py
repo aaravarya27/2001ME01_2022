@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from datetime import datetime, timedelta
+import mail
 os.system('cls')
 
 start_time = datetime.now()
@@ -168,6 +169,8 @@ def attendance_report():
         except:
             print('Error in file: Could not overwrite')
             exit()
+        
+        mail.sendreport()
 
     except:
         print('Error in function : attendance_report')
