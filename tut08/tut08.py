@@ -49,11 +49,41 @@ def scorecard():
         for i in team2.split(":")[1].split(','):
             players2.append(i.strip())
 
-        
+        try:
+            #open and read pak_inns1 file and remove all empty lines
+            pak_inns = open('pak_inns1.txt', 'r')
+            inns1comm = []
+            for i in pak_inns.readlines():
+                    i = i.strip()
+                    if len(i) > 0:
+                        inns1comm.append(i) 
+            pak_inns.close()
 
-    except:
-        print('Error in function: scorecard')
-        exit()
+        except FileNotFoundError:
+            print('Input file not found :', pak_inns)
+            exit()
+        except:
+            print('Error in file: Could not open ', pak_inns)
+            exit()
+
+        try:
+            #open and read india_inns2 file and remove all empty lines
+            ind_inns = open('india_inns2.txt', 'r')
+            inns2comm = []
+            for i in ind_inns.readlines():
+                    i = i.strip()
+                    if len(i) > 0:
+                        inns2comm.append(i) 
+            ind_inns.close()
+        
+        except FileNotFoundError:
+            print('Input file not found :', ind_inns)
+            exit()
+        except:
+            print('Error in file: Could not open ', ind_inns)
+            exit()
+
+        
 
 from platform import python_version
 ver = python_version()
