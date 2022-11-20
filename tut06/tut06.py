@@ -101,6 +101,39 @@ def attendance_report():
         df.at[0, "Invalid"] = pd.NA
         df.at[0, "Absent"] = pd.NA
         
+        #total lectures in total attendance column
+        for j in range (len(lectures)):
+            df.iloc[j+1, 3] = len(lectures)
+        
+        #separate dataframe for entry by each student
+        student_att = att[att["Attendance"] == i]
+        
+        #filling the columns of real, duplicate and invalid attendance
+        for k in student_att.iloc[:,0]:
+            #take timestamp column and split to get date and time separately 
+            date = k.split(" ")[0]
+            time = k.split(" ")[1]
+
+            #iteraating over valid dates
+            if(date in lectures):
+                #invalid if lies outside the lecture hour
+                if(str(starttime)[:-3] > time or str(endtime)[:-3] < time):
+                    df.iloc[lectures.index(date) + 1, 6] += 1
+                else:
+                    #else real for 1st occurance and duplicate for successive occurances
+                    if(df.iloc[lectures.index(date) + 1, 4] == 0):
+                        df.iloc[lectures.index(date) + 1, 4] += 1
+                    else:
+                        df.iloc[lectures.index(date) + 1, 5] += 1
+
+        #absent if real attendance is zero
+        for date in lectures:        
+            if(df.iloc[lectures.index(date) + 1, 4] == 0):
+                df.iloc[lectures.index(date) + 1, 7] += 1
+
+        #writing each csv in excel file
+        df.to_excel("./output/" + roll + ".xlsx", index = False)
+
         
 
 #check python version
