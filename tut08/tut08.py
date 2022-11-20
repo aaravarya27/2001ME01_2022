@@ -118,7 +118,54 @@ def scorecard():
         pak = team1.split(" ")[0]
         ind = team2.split(" ")[0]
         
-        
+        #iterating for each inning
+        for inning in [inns1comm, inns2comm]:
+            #clearing for next inning
+            bat.clear()
+            bowl.clear()
+
+            extras = 0
+            total = 0 
+            wkts = 0
+            balls = 0
+
+            nbr = 0
+            lbr = 0 
+            br = 0 
+            wdr = 0
+            fallwkts = [] 
+            wickets = 0
+
+            ppo = 0
+            ppr = 0
+            ppb = 0 
+
+            #iterating for each ball in an inning
+            for ball in inning:
+                if len(ball) == 0:
+                    continue
+                
+                #separating batsman and bowler from commentary 
+                ball = ball.strip()
+                bowler = ball.split('to', 1)[0].split(' ', 1)[1].strip()
+                batsman = ball.split('to', 1)[1].split(',', 1)[0].strip()
+                case = re.search('[^,]+,([\w\s]+)[,|!!]', ball).group(1).lower().strip()
+
+                #matching the name from player list
+                for player in players1:
+                    if batsman in player:
+                        batsman = player.strip()
+                for player in players2:
+                    if bowler in player:
+                        bowler = player.strip()
+                
+                #addition of names in scorecard
+                if (batsman not in bat.keys()):
+                    bat[batsman] = dict1.copy()
+                if (bowler not in bowl.keys()):
+                    bowl[bowler] = dict2.copy()
+                
+                
 
 from platform import python_version
 ver = python_version()
