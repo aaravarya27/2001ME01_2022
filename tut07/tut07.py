@@ -529,8 +529,8 @@ def octant_identification(df, output, mod=5000):
 
 #function to read and process multiple input files 
 def octant_analysis(mod):
+    
     try:
-
         dirc = "input"
         pref = "output\\"
         suff = "_octant_analysis_mod_" + str(mod) + ".xlsx"
