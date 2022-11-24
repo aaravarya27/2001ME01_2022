@@ -164,28 +164,28 @@ def scorecard():
                     bat[batsman] = dict1.copy()
                 if (bowler not in bowl.keys()):
                     bowl[bowler] = dict2.copy()
-                
-                #case of 6
-                if (case == 'six'):
-                    bat[batsman]['R'] += 6 #scored by batsman
-                    bat[batsman]['6s'] += 1 #6 tally increased by 1
-                    bowl[bowler]['R'] += 6 #added to bowlers account
-                
-                #case of 4
-                elif (case == 'four'):
-                    bat[batsman]['R'] += 4
-                    bat[batsman]['4s'] += 1
-                    bowl[bowler]['R'] += 4
 
                 #case of other runs scored including zero
-                elif ('run' in case and 'out' not in case):
+                if ('run' in case and 'out' not in case):
                     if (case.split()[0] == 'no'): 
                         bat[batsman]['R'] += 0
                         bowl[bowler]['R'] += 0
                     else:
                         bat[batsman]['R'] += int(case.split()[0])
-                        bowl[bowler]['R'] += int(case.split()[0])
+                        bowl[bowler]['R'] += int(case.split()[0])  
 
+                #case of 4
+                elif (case == 'four'):
+                    bat[batsman]['R'] += 4
+                    bat[batsman]['4s'] += 1
+                    bowl[bowler]['R'] += 4  
+                
+                #case of 6
+                elif (case == 'six'):
+                    bat[batsman]['R'] += 6 #scored by batsman
+                    bat[batsman]['6s'] += 1 #6 tally increased by 1
+                    bowl[bowler]['R'] += 6 #added to bowlers account
+                
                 #case of wide and wide+runs
                 elif ('wide' in case):
                     if ('wides' in case):
@@ -200,10 +200,7 @@ def scorecard():
                 #case of wickets   
                 elif ('out' in case):
                     bowl[bowler]['W'] += 1 #added to bowlers wkt tally
-                    if ('caught' in case and 'bowled' in case): #caught and bowled case
-                        bat[batsman]['out'] = 'c and b ' + bowler
-
-                    elif ('bowled' in case): #bowled case
+                    if ('bowled' in case): #bowled case
                         bat[batsman]['out'] = 'b ' + bowler
 
                     elif ('caught' in case):
@@ -213,14 +210,11 @@ def scorecard():
                                 c = player.strip() #getting full name of bowler from players list
                         bat[batsman]['out'] = 'c ' + c + ' b ' + bowler #caught and bowled by different people
 
+                    elif ('caught' in case and 'bowled' in case): #caught and bowled case
+                        bat[batsman]['out'] = 'c and b ' + bowler
+
                     elif ('lbw' in case):
                         bat[batsman]['out'] = 'lbw b ' + bowler #lbw case
-
-                    elif ('stumped' in case):
-                        for player in players2:
-                            if wk in player:
-                                wk = player.strip() #getting full name of wk from players list
-                        bat[batsman]['out'] = 'st' + wk + ' b ' + bowler #stumped case
 
                     elif ('run' in case):
                         bowl[bowler]['W'] -= 1 #runout does not go in bowlers wkt tally
@@ -237,14 +231,15 @@ def scorecard():
                 #case of byes and leg byes
                 if ('bye' in eve.group(1).lower().strip()):
                     current = eve.group(2).lower().strip()
-                    if ('run' in current):
-                        current = int(current[0])
 
-                    elif ('four' == current):
+                    if ('four' == current):
                         current = 4
 
                     elif ('six' == current):
                         current = 6
+
+                    elif ('run' in current):
+                        current = int(current[0])
 
                     if ('leg' in eve.group(1).lower().strip()):
                         lbr += current
@@ -255,16 +250,17 @@ def scorecard():
                 #case of no ball
                 if ('no ball' in eve.group(1).lower().strip()):
                     current = eve.group(2).lower().strip()
-                    if ('run' in current):
-                        current = int(nbr[0])
-
-                    elif ('four' == current):
+                    
+                    if ('four' == current):
                         current = 4
                         bat[batsman]['4s'] += 1
 
                     elif ('six' == current):
                         current = 6
                         bat[batsman]['6s'] += 1
+
+                    elif ('run' in current):
+                        current = int(nbr[0])
                         
                     nbr += 1
                     bat[batsman]['R'] += current
