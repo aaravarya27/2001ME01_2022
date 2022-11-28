@@ -496,7 +496,7 @@ def octant_identification(df, output, mod=5000):
         table_transition(df,-1,-1,-1,octant)
         value_transition(df, 0, len_df-1, len_df-1, -1)
 
-        index = range_total + 10 #index of 1st mod transition count heading
+        index = 13 #index of 1st mod transition count heading
 
         # mod transition count table
         for i in range (range_total+1): 
