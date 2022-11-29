@@ -33,7 +33,7 @@ def octant_assign(x,y,z):
 
 #function for octant count
 def octant_count(df, range_total, octant, len_df):
-    try:
+    # try:
         #mod ranges
         r=0
         while(r < range_total):
@@ -54,13 +54,17 @@ def octant_count(df, range_total, octant, len_df):
                 p += mod
                 r += 1
 
-            # for last index range
-            df.at[r+1, str(i)] = df["Octant"][p:len_df].value_counts()[i]
+                if(p+mod > len_df):
+                    if(i not in df["Octant"][p:len_df].value_counts().index):
+                        df.at[r+1, str(i)] = 0
+                    else:
+                        # for last index range
+                        df.at[r+1, str(i)] = df["Octant"][p:len_df].value_counts()[i]
 
     #except block in case an error occurs anywhere in the above function
-    except:
-        print('Error in function: octant_count')
-        exit()
+    # except:
+    #     print('Error in function: octant_count')
+    #     exit()
 
 # function to count each rank and rank1 octant ID and Name
 def octant_frequency(df, range_total, octant_name_id_mapping, octant):
@@ -424,10 +428,10 @@ def formatter(range_total, output):
         index = 0
         for i in range(0,range_total+1):
             for j in range(1,9):
-                for k in range (35,44):
+                for k in range (36,44):
                     if(maxval2 < sheet.cell(row = index+17+j, column = k).value):
                         maxval2 = sheet.cell(row = index+17+j, column = k).value        
-                for k in range (35,44):
+                for k in range (36,44):
                     if(sheet.cell(row = index+17+j, column = k).value == maxval2):
                         sheet.cell(row = index+17+j, column = k).fill = hl
                 maxval2 = 0
@@ -442,7 +446,7 @@ def formatter(range_total, output):
 
 #function for pre-processing
 def octant_identification(df, output, mod=5000):
-    try:
+    # try:
         #store length of dataframe 
         len_df = df.shape[0]
 
@@ -510,27 +514,27 @@ def octant_identification(df, output, mod=5000):
         subsequenceTime = [[],[],[],[],[],[],[],[],[]] #list for storing start and end times
         octant_longest_subsequence_count_with_range(df, octant, subsequenceTime)
 
-    except:
-        print('Error in function: octant_identification')
-        exit()
+    # except:
+    #     print('Error in function: octant_identification')
+    #     exit()
 
-    try:
-        # Write over corresponding output file
-        df.to_excel(output, index = False)
-    except PermissionError:
-        print('Permission Error: Cannot overwrite an opened file')
-        exit()
-    except:
-        print('Error in file: Could not overwrite')
-        exit()
+        try:
+            # Write over corresponding output file
+            df.to_excel(output, index = False)
+        except PermissionError:
+            print('Permission Error: Cannot overwrite an opened file')
+            exit()
+        except:
+            print('Error in file: Could not overwrite')
+            exit()
 
-    #function call for formatting the output file
-    formatter(range_total, output) 
+        #function call for formatting the output file
+        formatter(range_total, output) 
 
 #function to read and process multiple input files 
 def octant_analysis(mod):
     
-    try:
+    # try:
         dirc = "input"
         pref = "output\\"
         suff = "_octant_analysis_mod_" + str(mod) + ".xlsx"
@@ -546,12 +550,12 @@ def octant_analysis(mod):
 
             octant_identification(df, output, mod) # function call
 
-    except FileNotFoundError:
-        print('Input file not found :', name)
-        exit()
-    except:
-        print('Error in file: Could not open ', name)
-        exit() 
+    # except FileNotFoundError:
+    #     print('Input file not found :', name)
+    #     exit()
+    # except:
+    #     print('Error in file: Could not open ', name)
+    #     exit() 
             
 # check python version
 from platform import python_version
@@ -562,7 +566,7 @@ if ver == "3.8.10":
 else:
     print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmjw")
 
-mod = 5000 # hardcoded mod value
+mod = 200 # hardcoded mod value
 octant_analysis(mod)
 
 #This shall be the last lines of the code.
