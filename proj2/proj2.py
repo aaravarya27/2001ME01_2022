@@ -540,7 +540,35 @@ def octant_identification(df, output, mod=5000):
 
 	return output
 
+#Streamlit Interface Begins
+st.set_page_config(
+        page_title="Python Project",
+        page_icon=":gem:",
+    ) #Setting Favicon and page name
 
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) #Hiding default streamlit stuff
+
+st.caption("By Aarav Arya and Nischal Jain")
+st.title("Octant Analysis")
+st.write("##")
+st.markdown("<div id='linkto_top'></div>", unsafe_allow_html=True) #creating html ID
+
+if "outputs" not in st.session_state:
+	st.session_state.outputs = []
+
+def reset():
+	st.session_state.outputs.clear()
+
+#Radio Button to choose processing type
+st.subheader("Processing Type")
+bar = st.radio("Select one option", ("Single File", "Multiple Files", "Batch Processing"), on_change = reset, horizontal=True)
+st.write("-"*25)
 
 from platform import python_version
 ver = python_version()
