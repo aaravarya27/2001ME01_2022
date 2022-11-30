@@ -766,6 +766,11 @@ if bar == "Batch Processing":
 	st.write("#")
 	st.markdown("<a href='#linkto_top'>Scroll to Top</a>", unsafe_allow_html=True)
 
+#reset button to refresh the page
+col1, midcol, col2 = st.columns((2,10,1.5))
+with(col2):
+	if st.button("Reset"):
+		pyautogui.hotkey("ctrl", "F5")
 
 from platform import python_version
 ver = python_version()
