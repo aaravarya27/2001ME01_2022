@@ -626,7 +626,72 @@ if bar == "Single File":
 	#added a Scroll to Top hyperlink which redirects to html id created above (anchor tag)
 	st.markdown("<a href='#linkto_top'>Scroll to Top</a>", unsafe_allow_html=True)
 
+#similar for multiple files
+if bar == "Multiple Files":
 
+	st.write("##")
+	st.subheader("Input Data")
+	#file uploader accepts multiple files
+	data_file = st.file_uploader("File Upload", type=['xlsx'], accept_multiple_files=True)
+		
+	st.write("#")
+	c1, c2 = st.columns((2,10))
+	with c1:
+		st.write("#")
+		st.write("MOD Value")
+	with c2:
+		mod = st.number_input("Mod Value",min_value = 1, value = 5000, label_visibility="hidden")
+
+	st.write("#")
+	if(len(data_file) > 1): #number of files should be greater than 1
+		if st.button("Process Files "):
+			with st.spinner("Processing..."):
+				st.write("-"*25)
+
+				st.session_state.outputs.clear() #reseting session state variable
+				if data_file is not None:
+					for i in data_file:
+						
+						pref = "output\\"
+						suff = "_octant_analysis_mod_" + str(mod) + ".xlsx"
+						output = pref+(i.name[:-5])+suff
+
+						df = pd.read_excel(i)
+						if(len(df) != 0):
+							if(mod > len(df)):
+								st.error('Incorrect MOD Value', icon="🚨")
+								break
+							else:
+
+								output = octant_identification(df, output, mod)
+
+								st.session_state.outputs.append(output)
+						else:
+							st.error('Empty File : ' + str(i.name), icon="🚨")
+				
+				else:
+					st.error('Input Files not found', icon="🚨")
+
+	else:
+		st.write('Please select more than one file')
+
+	suff = "_octant_analysis_mod_" + str(mod) + ".xlsx"
+	date_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+
+	#download button doesnt gets refreshed after downloading 1 file since session state variable is preserved
+	for output in st.session_state.outputs:					
+		with open(output, 'rb') as file:
+			st.subheader("Output Data For : " + str(output[7:-29]) + ".xlsx")
+			x = pd.read_excel(file)
+			x = x.style.highlight_null(props="color: transparent;")
+			if st.button("Display Dataframe : " + str(output[7:-29])+"_"+"mod_"+str(mod)+".xlsx", type="primary"):
+				st.dataframe(x)
+			st.download_button(label='Download File : ' + str(output[7:-29])+"_"+"mod_"+str(mod)+".xlsx", 
+			data = file, 
+			file_name = (output[7:-29])+"_"+"mod_"+str(mod)+"_"+date_time+".xlsx",
+			mime = "application/octet-stream")
+	st.write("#")
+	st.markdown("<a href='#linkto_top'>Scroll to Top</a>", unsafe_allow_html=True)
 
 from platform import python_version
 ver = python_version()
