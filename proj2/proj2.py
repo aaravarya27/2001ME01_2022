@@ -611,8 +611,7 @@ if bar == "Single File":
 							st.subheader("Output Data For : " + str(output[7:-28]) + ".xlsx")
 							x = pd.read_excel(output)
 							x = x.style.highlight_null(props="color: transparent;") #removing NA cells
-							if st.button("Display Dataframe : " + (data_file.name[:-5])+"_"+"mod_"+str(mod)+".xlsx", type="primary"):
-								st.dataframe(x) #display output dataframe
+							st.dataframe(x) #display output dataframe
 							st.download_button(label='Download File : ' + (data_file.name[:-5])+"_"+"mod_"+str(mod)+".xlsx", 
 							data = file, 
 							file_name = (data_file.name[:-5])+"_"+"mod_"+str(mod)+"_"+date_time+".xlsx",
