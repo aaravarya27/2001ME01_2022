@@ -610,7 +610,8 @@ if bar == "Single File":
 							st.subheader("Output Data For : " + str(output[7:-28]) + ".xlsx")
 							x = pd.read_excel(output)
 							x = x.style.highlight_null(props="color: transparent;") #removing NA cells
-							st.dataframe(x) #display output dataframe
+							if st.button("Display Dataframe : " + (data_file.name[:-5])+"_"+"mod_"+str(mod)+".xlsx", type="primary"):
+								st.dataframe(x) #display output dataframe
 							st.download_button(label='Download File : ' + (data_file.name[:-5])+"_"+"mod_"+str(mod)+".xlsx", 
 							data = file, 
 							file_name = (data_file.name[:-5])+"_"+"mod_"+str(mod)+"_"+date_time+".xlsx",
@@ -621,8 +622,8 @@ if bar == "Single File":
 			else:
 				st.error('Input File not found', icon="🚨")
 	st.write("#")
-	#added a link to top hyperlink which redirects to html id created above (anchor tag)
-	st.markdown("<a href='#linkto_top'>Link to top</a>", unsafe_allow_html=True)
+	#added a Scroll to Top hyperlink which redirects to html id created above (anchor tag)
+	st.markdown("<a href='#linkto_top'>Scroll to Top</a>", unsafe_allow_html=True)
 
 #similar for multiple files
 if bar == "Multiple Files":
@@ -682,13 +683,14 @@ if bar == "Multiple Files":
 			st.subheader("Output Data For : " + str(output[7:-29]) + ".xlsx")
 			x = pd.read_excel(file)
 			x = x.style.highlight_null(props="color: transparent;")
-			st.dataframe(x)
+			if st.button("Display Dataframe : " + str(output[7:-29])+"_"+"mod_"+str(mod)+".xlsx", type="primary"):
+				st.dataframe(x)
 			st.download_button(label='Download File : ' + str(output[7:-29])+"_"+"mod_"+str(mod)+".xlsx", 
 			data = file, 
 			file_name = (output[7:-29])+"_"+"mod_"+str(mod)+"_"+date_time+".xlsx",
 			mime = "application/octet-stream")
 	st.write("#")
-	st.markdown("<a href='#linkto_top'>Link to top</a>", unsafe_allow_html=True)
+	st.markdown("<a href='#linkto_top'>Scroll to Top</a>", unsafe_allow_html=True)
 
 #for batch processing via path
 if bar == "Batch Processing":
@@ -755,13 +757,14 @@ if bar == "Batch Processing":
 			st.subheader("Output Data For : " + str(output[7:-29]) + ".xlsx")
 			x = pd.read_excel(file)
 			x = x.style.highlight_null(props="color: transparent;")
-			st.dataframe(x)
+			if st.button("Display Dataframe : " + str(output[7:-29])+"_"+"mod_"+str(mod)+".xlsx", type="primary"):
+				st.dataframe(x)
 			st.download_button(label='Download File :  ' + str(output[7:-29])+"_"+"mod_"+str(mod)+".xlsx", 
 			data = file, 
 			file_name = (output[7:-29])+"_"+"mod_"+str(mod)+"_"+date_time+".xlsx",
 			mime = "application/octet-stream")
 	st.write("#")
-	st.markdown("<a href='#linkto_top'>Link to top</a>", unsafe_allow_html=True)
+	st.markdown("<a href='#linkto_top'>Scroll to Top</a>", unsafe_allow_html=True)
 
 #reset button to refresh the page
 col1, midcol, col2 = st.columns((2,10,1.5))
