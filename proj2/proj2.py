@@ -570,6 +570,64 @@ st.subheader("Processing Type")
 bar = st.radio("Select one option", ("Single File", "Multiple Files", "Batch Processing"), on_change = reset, horizontal=True)
 st.write("-"*25)
 
+#for single file option
+if bar == "Single File":
+	
+	st.write("##")
+	st.subheader("Input Data")
+	data_file = st.file_uploader("File Upload", type=['xlsx'])
+	st.write("#")
+	#making 2 columns to display text and take number input side by side
+	c1, c2 = st.columns((2,10))
+	with c1:
+		st.write("#")
+		st.write("MOD Value")
+	with c2:
+		mod = st.number_input("Mod Value",min_value = 1, value = 5000, label_visibility="hidden")
+	st.write("#")
+
+	if st.button("Process File"): #processing begins on pressing the button
+		with st.spinner("Processing..."): #added spinner
+			st.write("-"*25)
+
+			if data_file is not None:
+				
+				pref = "output\\"
+				suff = "_octant_analysis_mod_" + str(mod) + ".xlsx"
+				output = pref+(data_file.name[:-5])+suff
+
+				df = pd.read_excel(data_file)
+				if(len(df) != 0):
+					if(mod > len(df)): #mod value should be less than or equal to length of dataframe
+						st.error('Incorrect MOD Value', icon="🚨")
+
+					else:
+						output = octant_identification(df, output, mod) #function call for tut07
+
+						date_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+
+						#Download button
+						with open(output, 'rb') as file:
+							st.subheader("Output Data For : " + str(output[7:-28]) + ".xlsx")
+							x = pd.read_excel(output)
+							x = x.style.highlight_null(props="color: transparent;") #removing NA cells
+							if st.button("Display Dataframe : " + (data_file.name[:-5])+"_"+"mod_"+str(mod)+".xlsx", type="primary"):
+								st.dataframe(x) #display output dataframe
+							st.download_button(label='Download File : ' + (data_file.name[:-5])+"_"+"mod_"+str(mod)+".xlsx", 
+							data = file, 
+							file_name = (data_file.name[:-5])+"_"+"mod_"+str(mod)+"_"+date_time+".xlsx",
+							mime = "application/octet-stream")
+				else:
+					st.error('Empty File', icon="🚨")
+
+			else:
+				st.error('Input File not found', icon="🚨")
+	st.write("#")
+	#added a Scroll to Top hyperlink which redirects to html id created above (anchor tag)
+	st.markdown("<a href='#linkto_top'>Scroll to Top</a>", unsafe_allow_html=True)
+
+
+
 from platform import python_version
 ver = python_version()
 
